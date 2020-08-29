@@ -3,7 +3,7 @@ version: 2.1.5
 synopsis: Publishing tools for papers, books, and presentations
 description: |
   Tools for rendering markdown-centric documents into PDFs.
-  
+
   A description of this package, a list of features, and some background
   to its design is contained in the
   <https://github.com/aesiniath/publish/blob/master/README.markdown README>
@@ -20,24 +20,26 @@ tested-with: GHC == 8.6
 github: aesiniath/publish
 
 dependencies:
- - base >= 4.11 && < 5
- - bytestring
- - chronologique
- - deepseq
- - directory
- - filepath
- - hinotify
- - megaparsec
- - pandoc-types
- - pandoc
- - template-haskell
- - text
- - typed-process
- - core-text >= 0.2.2.3
- - core-data
- - core-program >= 0.2.2.3
- - unix
- - unordered-containers
+  - base >= 4.11 && < 5
+  - bytestring
+  - chronologique
+  - deepseq
+  - directory
+  - filepath
+  - hinotify
+  - megaparsec
+  - opentelemetry
+  - opentelemetry-extra
+  - pandoc-types
+  - pandoc
+  - template-haskell
+  - text
+  - typed-process
+  - core-text >= 0.2.2.3
+  - core-data
+  - core-program >= 0.2.2.3
+  - unix
+  - unordered-containers
 
 ghc-options: -threaded -Wall -Wwarn -fwarn-tabs
 
@@ -45,38 +47,37 @@ executables:
   render:
     source-dirs: src
     main: RenderMain.hs
+    ghc-options: -eventlog
     other-modules:
-     - Environment
-     - LatexPreamble
-     - LatexOutputReader
-     - PandocToMarkdown
-     - ParseBookfile
-     - RenderDocument
-     - Utilities
+      - Environment
+      - LatexPreamble
+      - LatexOutputReader
+      - PandocToMarkdown
+      - ParseBookfile
+      - RenderDocument
+      - Utilities
 
   format:
     source-dirs: src
     main: FormatMain.hs
     other-modules:
-     - FormatDocument
-     - PandocToMarkdown
+      - FormatDocument
+      - PandocToMarkdown
 
 tests:
   check:
     dependencies:
-     - hspec
+      - hspec
     ghc-options: -threaded
     source-dirs:
-     - src
-     - tests
+      - src
+      - tests
     main: TestSuite.hs
     other-modules:
-     - CheckBookfileParser
-     - CheckTableProperties
-     - CompareFragments
-     - Environment
-     - FormatDocument
-     - PandocToMarkdown
-     - ParseBookfile
- 
-
+      - CheckBookfileParser
+      - CheckTableProperties
+      - CompareFragments
+      - Environment
+      - FormatDocument
+      - PandocToMarkdown
+      - ParseBookfile

@@ -1,14 +1,15 @@
-{-# LANGUAGE CPP #-}
+{-# LANGUAGE CPP               #-}
 {-# LANGUAGE OverloadedStrings #-}
-{-# LANGUAGE QuasiQuotes #-}
-{-# LANGUAGE TemplateHaskell #-}
+{-# LANGUAGE QuasiQuotes       #-}
+{-# LANGUAGE TemplateHaskell   #-}
 
 module Main where
 
-import Core.Program
-import Core.Text
-import Environment (initial)
-import RenderDocument (program)
+import           Core.Program
+import           Core.Text
+import           Environment            (initial)
+import           OpenTelemetry.Eventlog
+import           RenderDocument         (program)
 
 #ifdef __GHCIDE__
 version :: Version
@@ -19,8 +20,10 @@ version = $(fromPackage)
 #endif
 
 main :: IO ()
-main = do
+main = withSpan "main.publish.avoid_success" $ \sp -> do
+  addEvent sp "message" "Entering main, reading env."
   env <- initial
+  addEvent sp "message" "Environment read. Reading Context."
   context <-
     configure
       version
@@ -82,5 +85,6 @@ main = do
           |]
           ]
       )
-
+  addEvent sp "message" "Context read. Beginning execution."
   executeWith context program
+  addEvent sp "message" "Execution finished."
